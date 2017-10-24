@@ -1,0 +1,24 @@
+{
+  "name": "reportes-api",
+  "version": "0.3.0",
+  "description": "Modulo reportes Grupo Barajas",
+  "main": "index.js",
+  "scripts": {
+    "eslint": "standard",
+    "fixcode": "standard --fix",
+    "start": "nodemon index.js"
+  },
+  "author": "Rigoberto González Lomelí",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.1",
+    "jwt-simple": "^0.5.1",
+    "mongoose": "^4.12.0",
+    "mssql": "^4.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1",
+    "standard": "^10.0.3"
+  }
+}
