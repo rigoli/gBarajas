@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const compraCombustibleSchema = Schema({
   idUsr: Number,
   idSuc: Number,
-  idComb: Number,
+  idTan: Number,
   litros: Number,
   importe: Number,
   factura: Number,

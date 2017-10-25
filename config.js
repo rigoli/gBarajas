@@ -2,6 +2,7 @@ const config = {
   serverPort: 3000,
   mongoEnable: true,  // Afinar con las funciones
   defaultDB: "mssql",
+  userTest: 1,
 
   mongodb: {
     host: 'localhost',

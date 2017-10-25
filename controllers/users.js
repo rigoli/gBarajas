@@ -5,12 +5,21 @@ const mssql = require('mssql')
 const Users = require('../models/users')
 
 function existEmail (email) {
-  var queryCheckUsr = `SELECT email FROM users WHERE email = '${email}';`
-  // VER SI ES NECESARIO HACER LA CONSULTA EN MONGODB
+  const queryCheckUsr = `SELECT email FROM users WHERE email = '${email}';`
 
   return new Promise(function (resolve, reject) {
     new mssql.Request().query(queryCheckUsr, (err, result) => {
       resolve(result.rowsAffected)
+    })
+  })
+}
+
+function getUsrInfo(idUser) {
+  const queryInfoUsr = `SELECT idSuc, usrName, lastname, email, usrPassword, dateCreate, privilege FROM users WHERE idUsr = ${config.userTest};`
+
+  return new Promise((resolve, reject) => {
+    new mssql.Request().query(queryInfoUsr, (err, result) => {
+      resolve(result.recordsets[0][0])
     })
   })
 }
@@ -59,7 +68,7 @@ function addUser (req, res) {
     }
   }).catch(function (err) {
     res.status(500).send({ error: err, message: 'Error en la promesa - "existEmail".' })
-  });
+  })
   // MSSQL TERMINA
 }
 
@@ -158,7 +167,7 @@ function updateUser (req, res) {
 }
 
 function deleteUser (req, res) {
-  var userId = req.params.id
+  const userId = req.params.id
 
   // CONSULTA EN MSSQL
   let mssqlQuery = `UPDATE users SET del = 1 WHERE idUsr = ${userId} AND del = 0;`
@@ -179,6 +188,7 @@ function deleteUser (req, res) {
 
 module.exports = {
   existEmail,
+  getUsrInfo,
   addUser,
   getUser,
   getUsers,
