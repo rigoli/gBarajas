@@ -3,13 +3,14 @@
 const config = require('../config')
 const mssql = require('mssql')
 const ComprasCombustible = require('../models/compraCombustibles')
-const UsersFunctions = require('../controllers/users')
+const UsersFunctions = require('../controllers/api-log')
 
 function compraCombustible (req, res) {
   const body = req.body
 
   const compra = new ComprasCombustible({
     idUsr: config.userTest,
+    idSuc: body.idSuc,
     idTan: body.idTan,
     litros: body.litros,
     importe: body.importe,
@@ -17,39 +18,27 @@ function compraCombustible (req, res) {
     hraAumento: body.hraAumento
   })
 
-  UsersFunctions.getUsrInfo(compra.idUsr).then((usrInfo) => {
-    let msgLog = `${usrInfo.usrName} ${usrInfo.lastname} Registro Compra de Combustible en Gasolinera  `
-    console.log(msgLog)
-    res.status(200).send(usrInfo.usrName)
-  }).catch(function (err) {
-    res.status(500).send({ error: err, message: 'Error en la promesa - "getUsrInfo".' })
-  })
+  let queryCompraInsert = `
+      INSERT INTO [dbo].[compraCombustible] ([idUsr], [idSuc], [idTan], [litros], [importe], [factura], [hraAumento], [dateReg])
+        VALUES
+      ('${compra.idUsr}','${compra.idSuc}','${compra.idTan}', '${compra.litros}', '${compra.importe}', '${compra.factura}', '${compra.hraAumento}', GETDATE());`
 
-  // let queryCompraInsert = `
-  //     INSERT INTO [dbo].[compraCombustible] ([idUsr], [idTan], [litros], [importes], [factura], [hraAumento], [dateReg])
-  //       VALUES
-  //     ('${compra.idUsr}','${compra.idTan}', '${compra.litros}', '${compra.importe}', '${compra.factura}', '${compra.hraAumento}');`
+  let queryUpdateTanque = `UPDATE tanques SET litros = litros+${compra.litros}, ultimaRecarga = '${compra.hraAumento}' WHERE idTan = 8;`
 
-  // let queryUpdateTanque = `UPDATE tanques SET litros = '${compra.litros}', ultimaRecarga = '${compra.hraAumento}' WHERE idTan = 8;`
+console.log(queryCompraInsert)
+console.log(queryUpdateTanque)
+
 
   // new mssql.Request().query(`${queryCompraInsert} ${queryUpdateTanque}`, (err, result) => {
   //   if (err) {
-  //     res.status(500).send({ err, message: 'Error de consulta.', query: queryInsert })
+  //     res.status(500).send({ err, message: 'Error de consulta.' })
   //   }
 
-  //   if (result.rowsAffected == true) {
+  //   res.status(201).send({ result })
 
-  //     if (config.mongoEnable === true) {
-  //       // UNA VEZ REGISTRADO EN SQL SERVER, EL USUARIO SE REGISTRA EN MONGDB PARA FUTURAS CONSULTAS
-  //       // GUARDANDO EL USUARIO EN MONGODB
-  //       user.save((err, compraStored) => {
-  //         if (err) return res.status(500).send({ error: `Hubo un error: ${err}. MONGODB` })
-  //         if (!compraStored) return res.status(400).send({ error: 'No se guardó el usuario. MONGODB' })
-  //       })
-  //       // TERMINA MONGODB
-  //     }
-  //     res.status(201).send({ message: 'El usuario ha sido registrado' })
-  //   }
+  //   // if (result.rowsAffected == true) {
+  //   //   // res.status(201).send({ message: 'El usuario ha sido registrado' })
+  //   // }
   // })
 }
 

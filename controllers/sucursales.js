@@ -4,6 +4,16 @@ const config = require('../config')
 const mssql = require('mssql')
 const Sucursales = require('../models/sucursales')
 
+function getSucInfo(idSuc) {
+  let querySuc = `SELECT nombreSuc, encargado, dateCreate FROM sucursales WHERE idSuc = ${idSuc};`
+
+  return new Promise((resolve, reject) => {
+    new mssql.Request().query(querySuc, (err, result) => {
+      resolve(result.recordsets[0][0])
+    })
+  })
+}
+
 function addSucursal(req, res) {
   const body = req.body
 
@@ -148,6 +158,7 @@ function deleteSucursal(req, res) {
 }
 
 module.exports = {
+  getSucInfo,
   addSucursal,
   getSucursal,
   getSucursales,

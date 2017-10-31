@@ -15,10 +15,10 @@ function existEmail (email) {
 }
 
 function getUsrInfo(idUser) {
-  const queryInfoUsr = `SELECT idSuc, usrName, lastname, email, usrPassword, dateCreate, privilege FROM users WHERE idUsr = ${config.userTest};`
+  let queryUsr = `SELECT idSuc, usrName, lastname, email, usrPassword, dateCreate, privilege FROM users WHERE idUsr = ${config.userTest};`
 
   return new Promise((resolve, reject) => {
-    new mssql.Request().query(queryInfoUsr, (err, result) => {
+    new mssql.Request().query(queryUsr, (err, result) => {
       resolve(result.recordsets[0][0])
     })
   })

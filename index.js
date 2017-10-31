@@ -4,6 +4,7 @@ const config = require('./config')
 const app = require('./app')
 const mongoose = require('mongoose')
 const mssql = require('mssql')
+const Sequelize = require('sequelize')
 
 app.listen(config.serverPort, () => {
   console.log(`NodeJS server iniciado en el puerto: ${config.serverPort}`)
